@@ -3552,12 +3552,12 @@ New Status: {status}
     db.session.commit()
 
     return redirect("/seller")
-# -------------------------
-# RUN
-# -------------------------
+# -----------------------
 if __name__ == "__main__":
 
     for rule in app.url_map.iter_rules():
         print(rule)
 
-    socketio.run(app, debug=True)
+    port = int(os.environ.get("PORT", 10000))
+
+    socketio.run(app, host="0.0.0.0", port=port)
