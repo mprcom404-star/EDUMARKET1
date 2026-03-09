@@ -9,3 +9,5 @@ eventlet
 gunicorn
 python-socketio
 python-engineio
+python-dotenv
+email-validator
