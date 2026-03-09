@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">Messages</h2>
+
+<div class="list-group">
+
+{% for c in conversations %}
+
+<a href="/chat/{{c.user.id}}" class="list-group-item list-group-item-action">
+
+<div class="d-flex justify-content-between">
+
+<strong>{{c.user.name}}</strong>
+
+<small class="text-muted">
+{{c.time.strftime("%d %b %H:%M")}}
+</small>
+
+</div>
+
+<p class="mb-0 text-muted">
+{{c.last_message}}
+</p>
+
+</a>
+
+{% endfor %}
+
+</div>
+
+{% if not conversations %}
+<p class="text-muted mt-4">No conversations yet.</p>
+{% endif %}
+
+</div>
+
+{% endblock %}

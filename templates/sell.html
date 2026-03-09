@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-8">
+
+<div class="sell-card">
+
+<div class="sell-header">
+
+<h3>📚 Sell Your Study Material</h3>
+
+<p class="text-light small mb-0">
+Upload books, notes, calculators and other educational items.
+</p>
+
+</div>
+
+<div class="sell-body">
+
+<form method="POST" enctype="multipart/form-data">
+
+<!-- PRODUCT NAME -->
+
+<div class="mb-3">
+
+<label class="form-label">Product Name</label>
+
+<input type="text"
+name="name"
+class="form-control modern-input"
+placeholder="Example: Engineering Mathematics Notes"
+required>
+
+</div>
+
+<div class="row">
+
+<!-- PRICE -->
+
+<div class="col-md-4 mb-3">
+
+<label class="form-label">Price (₹)</label>
+
+<input type="number"
+name="price"
+class="form-control modern-input"
+placeholder="Enter price"
+required>
+
+</div>
+
+<!-- CATEGORY DROPDOWN -->
+
+<div class="col-md-4 mb-3">
+
+<label class="form-label">Select Category</label>
+
+<select name="category" class="form-control modern-input">
+
+<option value="">Select Category</option>
+
+{% for c in categories %}
+
+<option value="{{ c.id }}">
+{{ c.name }}
+</option>
+
+{% endfor %}
+
+</select>
+
+</div>
+
+<!-- NEW CATEGORY -->
+
+<div class="col-md-4 mb-3">
+
+<label class="form-label">Add New Category</label>
+
+<input type="text"
+name="new_category"
+class="form-control modern-input"
+placeholder="Example: Lab Equipment">
+
+</div>
+
+</div>
+
+<!-- DESCRIPTION -->
+
+<div class="mb-3">
+
+<label class="form-label">Description</label>
+
+<textarea name="description"
+class="form-control modern-input"
+rows="4"
+placeholder="Describe the material"></textarea>
+
+</div>
+
+<!-- MULTIPLE IMAGE UPLOAD -->
+
+<div class="mb-4">
+
+<label class="form-label">Upload Product Images</label>
+
+<input type="file"
+name="images"
+multiple
+class="form-control modern-input"
+accept="image/*"
+onchange="previewImages(event)"
+required>
+
+<div class="image-preview mt-3" id="previewContainer"></div>
+
+</div>
+
+<!-- SUBMIT BUTTON -->
+
+<div class="d-grid">
+
+<button class="btn btn-success btn-lg sell-btn">
+Post Product
+</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+/* CARD */
+
+.sell-card{
+background:white;
+border-radius:18px;
+overflow:hidden;
+box-shadow:0 20px 45px rgba(0,0,0,0.12);
+animation:fadeUp 0.5s ease;
+}
+
+/* HEADER */
+
+.sell-header{
+background:linear-gradient(135deg,#2563eb,#4f46e5);
+color:white;
+padding:25px;
+text-align:center;
+}
+
+/* BODY */
+
+.sell-body{
+padding:30px;
+}
+
+/* INPUT */
+
+.modern-input{
+border-radius:10px;
+padding:12px;
+border:1px solid #ddd;
+}
+
+.modern-input:focus{
+border-color:#2563eb;
+box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* BUTTON */
+
+.sell-btn{
+border-radius:10px;
+font-weight:600;
+transition:0.25s;
+}
+
+.sell-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,0.15);
+}
+
+/* IMAGE PREVIEW */
+
+.image-preview{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.image-preview img{
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* ANIMATION */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+<script>
+
+function previewImages(event){
+
+const container = document.getElementById("previewContainer");
+
+container.innerHTML = "";
+
+const files = event.target.files;
+
+for(let i=0;i<files.length;i++){
+
+const reader = new FileReader();
+
+reader.onload = function(e){
+
+const img = document.createElement("img");
+
+img.src = e.target.result;
+
+container.appendChild(img);
+
+}
+
+reader.readAsDataURL(files[i]);
+
+}
+
+}
+
+</script>
+
+{% endblock %}

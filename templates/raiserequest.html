@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h3 class="mb-4">⚠ Raise Order Request</h3>
+
+<div class="card p-4 shadow-sm">
+
+<h5 class="mb-3">Order Details</h5>
+
+<p><b>Order ID:</b> {{ order.order_id }}</p>
+<p><b>Product ID:</b> {{ order.product_id }}</p>
+<p><b>Amount Paid:</b> ₹{{ order.price }}</p>
+
+<hr>
+
+<form method="POST">
+
+<div class="mb-3">
+
+<label class="form-label">Request Type</label>
+
+<select name="type" class="form-control" required>
+
+<option value="">Select Request</option>
+<option value="refund">Refund</option>
+<option value="return">Return</option>
+<option value="issue">Report Issue</option>
+
+</select>
+
+</div>
+
+<div class="mb-3">
+
+<label class="form-label">Reason</label>
+
+<textarea
+name="reason"
+class="form-control"
+rows="4"
+placeholder="Explain your issue..."
+required>
+</textarea>
+
+</div>
+
+<button class="btn btn-danger">
+Submit Request
+</button>
+
+<a href="/profile" class="btn btn-secondary">
+Cancel
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

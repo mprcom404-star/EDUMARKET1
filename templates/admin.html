@@ -1,0 +1,632 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+.admin-layout{
+display:flex;
+min-height:100vh;
+}
+
+.sidebar{
+width:240px;
+background:#0f172a;
+color:white;
+padding:25px 15px;
+position:sticky;
+top:0;
+height:100vh;
+}
+
+.sidebar h4{
+font-weight:700;
+margin-bottom:25px;
+}
+
+.sidebar a{
+display:block;
+padding:10px 12px;
+border-radius:8px;
+color:#cbd5f1;
+text-decoration:none;
+margin-bottom:8px;
+transition:.2s;
+}
+
+.sidebar a:hover{
+background:#1e293b;
+color:white;
+}
+
+.admin-content{
+flex:1;
+padding:30px;
+background:#f8fafc;
+}
+
+.stat-card{
+border-radius:14px;
+padding:20px;
+color:white;
+transition:.3s;
+box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+
+.stat-card:hover{
+transform:translateY(-3px);
+}
+
+.stat-number{
+font-size:28px;
+font-weight:700;
+}
+
+.users{background:#3b82f6;}
+.products{background:#22c55e;}
+.orders{background:#f59e0b;}
+.revenue{background:#ef4444;}
+.payout{background:#8b5cf6;}
+.disputes{background:#dc2626;}
+.refunds{background:#14b8a6;}
+
+.section-card{
+background:white;
+border-radius:14px;
+padding:22px;
+margin-top:30px;
+box-shadow:0 10px 20px rgba(0,0,0,.05);
+}
+
+</style>
+
+<div class="admin-layout">
+
+<div class="sidebar">
+
+<h4>Admin Panel</h4>
+
+<a href="#dashboard">Dashboard</a> <a href="#analytics">Analytics</a> <a href="#payouts">Seller Payouts</a> <a href="#refunds">Refunds</a> <a href="#risk">Risk Alerts</a> <a href="#products">Products</a> <a href="#users">Users</a> <a href="#coupons">Coupons</a> <a href="#disputes">Disputes</a><a href="#platformfee">Platform Fee</a>
+
+</div>
+
+<div class="admin-content">
+
+<h2 id="dashboard">⚙ Admin Dashboard</h2>
+
+<div class="row g-4 mt-2">
+
+<div class="col-md-2">
+<div class="stat-card users">
+<div>Total Users</div>
+<div class="stat-number">{{ total_users }}</div>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="stat-card products">
+<div>Total Products</div>
+<div class="stat-number">{{ total_products }}</div>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="stat-card orders">
+<div>Total Orders</div>
+<div class="stat-number">{{ total_orders }}</div>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="stat-card revenue">
+<div>Total Revenue</div>
+<div class="stat-number">₹{{ total_sales }}</div>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="stat-card payout">
+<div>Total Payouts</div>
+<div class="stat-number">₹{{ total_payouts }}</div>
+</div>
+</div>
+
+<div class="col-md-2">
+<div class="stat-card refunds">
+<div>Total Refunds</div>
+<div class="stat-number">₹{{ total_refunds }}</div>
+</div>
+</div>
+
+</div>
+
+<!-- ANALYTICS -->
+
+<div id="analytics" class="section-card">
+
+<h4>Platform Financial Analytics</h4>
+
+<canvas id="financeChart"></canvas>
+
+<hr>
+
+<h5 class="mt-4">Refund Monitoring</h5>
+
+<canvas id="refundChart"></canvas>
+
+</div>
+
+<!-- SELLER PAYOUTS -->
+
+<div id="payouts" class="section-card">
+
+<h4>Seller Payouts</h4>
+
+<table class="table table-hover">
+
+<tr>
+<th>Order</th>
+<th>Seller</th>
+<th>Amount</th>
+<th>Payout TXN</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for order in orders %}
+
+<tr>
+
+<td>{{order.order_id}}</td>
+
+<td>{{order.seller_id}}</td>
+
+<td>₹{{order.price}}</td>
+
+<td>
+{% if order.payout_txn_id %}
+<span class="text-success">{{order.payout_txn_id}}</span>
+{% else %}
+<span class="text-muted">Not Paid</span>
+{% endif %}
+</td>
+
+<td>
+
+{% if order.payout_status == "Paid" %} <span class="badge bg-success">Paid</span>
+{% else %} <span class="badge bg-warning text-dark">Pending</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if order.payout_status == "Pending" %}
+
+<a href="/admin/payout-gateway/{{order.id}}"
+class="btn btn-success btn-sm">
+Pay Seller </a>
+
+{% else %}
+
+<span class="text-muted">Completed</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<!-- REFUND MANAGEMENT -->
+
+<div id="refunds" class="section-card">
+
+<h4>Refund Management</h4>
+
+<table class="table table-hover">
+
+<tr>
+<th>Refund ID</th>
+<th>Order</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Cancelled By</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Refund TXN</th>
+</tr>
+
+{% for r in refunds %}
+
+<tr>
+
+<td>{{ r.refund_id }}</td>
+
+<td>{{ r.order_id }}</td>
+
+<td>{{ r.buyer_id }}</td>
+
+<td>{{ r.seller_id }}</td>
+
+<td>
+{% if r.cancelled_by %}
+{{ r.cancelled_by }}
+{% else %}
+N/A
+{% endif %}
+</td>
+
+<td>₹{{ r.amount }}</td>
+
+<td>
+
+{% if r.status == "Processing" %} <span class="badge bg-warning text-dark">Processing</span>
+
+{% elif r.status == "Credited" %} <span class="badge bg-success">Refunded</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{% if r.refund_transaction_id %} <span class="text-success">{{ r.refund_transaction_id }}</span>
+{% else %} <span class="text-muted">Pending</span>
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<!-- RISK ALERTS -->
+
+<div id="risk" class="section-card">
+
+<h4>Marketplace Risk Alerts</h4>
+
+<table class="table table-bordered">
+
+<tr>
+<th>Order</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Risk</th>
+<th>Status</th>
+</tr>
+
+{% for r in refunds %}
+
+{% if r.status == "Processing" %}
+
+<tr>
+
+<td>{{r.order_id}}</td>
+<td>{{r.buyer_id}}</td>
+<td>{{r.seller_id}}</td>
+
+<td>
+<span class="badge bg-danger">
+Refund Pending
+</span>
+</td>
+
+<td>Admin Monitoring</td>
+
+</tr>
+
+{% endif %}
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div id="products" class="section-card">
+
+<h4>Product Moderation</h4>
+
+<table class="table">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Price</th>
+<th>Action</th>
+</tr>
+
+{% for p in products %}
+
+<tr>
+
+<td>{{p.id}}</td>
+<td>{{p.name}}</td>
+<td>₹{{p.price}}</td>
+
+<td>
+<a href="/admin/delete-product/{{p.id}}"
+class="btn btn-danger btn-sm">
+Delete
+</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<!-- USERS -->
+
+<div id="users" class="section-card">
+
+<h4>User Management</h4>
+
+<table class="table table-striped">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Role</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+{% for u in users %}
+
+<tr>
+
+<td>{{u.id}}</td>
+<td>{{u.name}}</td>
+<td>{{u.email}}</td>
+
+<td>
+
+{% if u.role == "seller" %} <span class="badge bg-primary">Seller</span>
+{% else %} <span class="badge bg-secondary">Buyer</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if u.is_banned %} <span class="badge bg-danger">Banned</span>
+{% else %} <span class="badge bg-success">Active</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if u.is_banned %}
+
+<a href="/admin/unban-user/{{u.id}}"
+class="btn btn-success btn-sm">
+Unban </a>
+
+{% else %}
+
+<a href="/admin/ban-user/{{u.id}}"
+class="btn btn-warning btn-sm">
+Ban </a>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+<!-- COUPONS -->
+
+<div id="coupons" class="section-card">
+
+<h4>Coupon Management</h4>
+
+<form method="POST" action="/admin/add-coupon" class="row g-2 mb-3">
+
+<div class="col-md-3">
+<input name="code" class="form-control" placeholder="Coupon Code" required>
+</div>
+
+<div class="col-md-2">
+<input name="discount" type="number" class="form-control" placeholder="Discount %" required>
+</div>
+
+<div class="col-md-2">
+<input name="min_amount" type="number" class="form-control" placeholder="Min Amount">
+</div>
+
+<div class="col-md-3">
+<input name="expiry" type="date" class="form-control">
+</div>
+
+<div class="col-md-2">
+<button class="btn btn-success w-100">Create</button>
+</div>
+
+</form>
+
+</div>
+
+<!-- PLATFORM FEE -->
+
+<div id="platformfee" class="section-card">
+
+<h4>Platform Fee Settings</h4>
+
+<form method="POST" action="/admin/update-platform-fee">
+
+<div class="row g-2">
+
+<div class="col-md-4">
+
+<input
+type="number"
+name="fee"
+class="form-control"
+value="{{ platform_fee }}"
+min="0"
+max="50"
+required>
+
+</div>
+
+<div class="col-md-3">
+
+<button class="btn btn-primary w-100">
+Update Fee
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+<p class="text-muted mt-2">
+This percentage will be deducted from seller payouts before transfer.
+</p>
+
+</div>
+
+<!-- DISPUTES -->
+
+<div id="disputes" class="section-card">
+
+<h4>Dispute Dashboard</h4>
+
+<table class="table table-bordered">
+
+<tr>
+<th>ID</th>
+<th>Order</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Type</th>
+<th>Status</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+
+{% for d in disputes %}
+
+<tr>
+
+<td>#{{d.id}}</td>
+<td>{{d.order_id}}</td>
+<td>{{d.buyer_id}}</td>
+<td>{{d.seller_id}}</td>
+
+<td>
+<span class="badge bg-warning">{{d.request_type}}</span>
+</td>
+
+<td>
+
+{% if d.status == "Open" %} <span class="badge bg-danger">Open</span>
+
+{% elif d.status == "Under Review" %} <span class="badge bg-info">Under Review</span>
+
+{% elif d.status == "Resolved" %} <span class="badge bg-success">Resolved</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ d.created_at.strftime("%Y-%m-%d") }}</td>
+
+<td>
+
+<a href="/request/{{d.id}}" class="btn btn-primary btn-sm">Chat</a>
+
+<a href="/admin/update-request/{{d.id}}/Resolved"
+class="btn btn-success btn-sm">
+Resolve </a>
+
+<a href="/admin/update-request/{{d.id}}/Rejected"
+class="btn btn-danger btn-sm">
+Reject </a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const financeChart = document.getElementById("financeChart");
+
+new Chart(financeChart,{
+type:'bar',
+data:{
+labels:["Orders","Payouts","Refunds","Disputes"],
+datasets:[{
+label:"Marketplace Activity",
+data:[
+{{ total_orders }},
+{{ total_payouts }},
+{{ total_refunds }},
+{{ open_disputes }}
+],
+backgroundColor:[
+"#f59e0b",
+"#8b5cf6",
+"#14b8a6",
+"#ef4444"
+]
+}]
+}
+});
+
+
+const refundChart = document.getElementById("refundChart");
+
+new Chart(refundChart,{
+type:'doughnut',
+data:{
+labels:["Processing","Completed"],
+datasets:[{
+data:[
+{{ refund_processing }},
+{{ refund_completed }}
+],
+backgroundColor:["#f59e0b","#22c55e"]
+}]
+}
+});
+
+</script>
+
+{% endblock %}

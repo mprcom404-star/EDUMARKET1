@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-6">
+
+<div class="card shadow-lg border-0">
+
+<div class="card-body p-4">
+
+<h4 class="mb-4 text-center">
+Refund Payment
+</h4>
+
+<hr>
+
+<div class="mb-3">
+
+<b>Refund ID</b><br> <span class="text-muted">
+{{ refund.refund_id }} </span>
+
+</div>
+
+<div class="mb-3">
+
+<b>Order ID</b><br> <span class="text-muted">
+#{{ order.order_id }} </span>
+
+</div>
+
+<div class="mb-3">
+
+<b>Amount</b><br> <span class="fw-bold text-danger">
+₹{{ refund.amount }} </span>
+
+</div>
+
+<div class="mb-3">
+
+<b>Reason</b><br> <span class="text-muted">
+{{ refund.reason }} </span>
+
+</div>
+
+<hr>
+
+<form method="POST" action="/complete-refund/{{refund.id}}">
+
+<div class="mb-3">
+
+<label class="form-label">
+Refund Transaction ID
+</label>
+
+<input
+type="text"
+name="transaction_id"
+class="form-control"
+placeholder="Enter payment gateway transaction ID"
+required>
+
+</div>
+
+<button class="btn btn-danger w-100">
+
+<i class="bi bi-cash"></i>
+Confirm Refund Payment
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+.card{
+border-radius:16px;
+}
+
+</style>
+
+{% endblock %}

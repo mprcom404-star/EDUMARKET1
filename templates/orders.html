@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<h3 class="mb-4 fw-bold">📦 Your Orders</h3>
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div class="order-card" onclick="toggleOrder({{order.id}})">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<div class="d-flex align-items-center gap-3">
+
+{% if order.product_image %}
+<img src="{{ url_for('static', filename='uploads/' ~ order.product_image) }}" width="70" class="product-img">
+{% else %}
+<img src="{{ url_for('static', filename='uploads/noimage.png') }}" width="70" class="product-img">
+{% endif %}
+
+<div>
+
+<b>{{ order.product_name }}</b><br>
+
+<small class="text-muted">
+Order ID: {{ order.order_id }}
+</small>
+
+{% if order.refund_status %}
+<span class="badge bg-warning ms-2">Refund</span>
+{% endif %}
+
+{% if order.dispute %}
+<span class="badge bg-danger ms-2">Dispute</span>
+{% endif %}
+
+</div>
+
+</div>
+
+
+<div class="text-end">
+
+<div class="fw-bold price">₹{{order.price}}</div>
+
+<span class="badge
+{% if order.fulfillment_status == 'Delivered' %}bg-success
+{% elif order.fulfillment_status == 'Out for Delivery' %}bg-info
+{% elif order.fulfillment_status == 'Shipped' %}bg-primary
+{% elif order.fulfillment_status == 'Processed' %}bg-dark
+{% elif order.fulfillment_status == 'Processing' %}bg-warning text-dark
+{% elif order.fulfillment_status == 'Cancelled' %}bg-danger
+{% else %}bg-secondary
+{% endif %}
+">
+
+{{order.fulfillment_status}}
+
+</span>
+
+<br>
+
+<small class="text-muted">
+ETA: {{order.estimated_delivery.strftime("%d %b") if order.estimated_delivery else "TBA"}}
+</small>
+
+{% if order.fulfillment_status == "Processing" %}
+
+<form id="cancelForm{{order.id}}" action="/cancel-order/{{order.id}}" method="POST" onclick="event.stopPropagation()">
+
+<button type="button"
+class="cancel-link"
+onclick="openCancelModal({{order.id}})">
+Cancel Item
+</button>
+
+</form>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<div class="mt-3">
+
+<div class="progress progress-track">
+
+<div class="progress-bar progress-animate
+{% if order.fulfillment_status == 'Delivered' %}bg-success
+{% elif order.fulfillment_status == 'Out for Delivery' %}bg-info
+{% elif order.fulfillment_status == 'Shipped' %}bg-primary
+{% elif order.fulfillment_status == 'Processed' %}bg-dark
+{% elif order.fulfillment_status == 'Processing' %}bg-warning
+{% elif order.fulfillment_status == 'Cancelled' %}bg-danger
+{% endif %}
+"
+data-width="
+{% if order.fulfillment_status == 'Processing' %}10
+{% elif order.fulfillment_status == 'Processed' %}30
+{% elif order.fulfillment_status == 'Shipped' %}60
+{% elif order.fulfillment_status == 'Out for Delivery' %}85
+{% elif order.fulfillment_status == 'Delivered' %}100
+{% else %}5
+{% endif %}
+">
+</div>
+
+</div>
+
+<div class="d-flex justify-content-between small text-muted mt-1 tracking-labels">
+<span>Placed</span>
+<span>Processed</span>
+<span>Shipped</span>
+<span>Out</span>
+<span>Delivered</span>
+</div>
+
+</div>
+
+
+<div id="order{{order.id}}" class="order-details mt-3" onclick="event.stopPropagation()">
+
+<hr>
+
+<h6>Invoice Details</h6>
+
+<p>
+<b>Order ID:</b> {{order.order_id}} <br>
+<b>Purchase Date:</b>
+{{order.purchase_time.strftime("%d %b %Y") if order.purchase_time}}
+</p>
+
+
+<h6>Payment Details</h6>
+
+<p>
+<b>Transaction ID:</b> {{order.transaction_id}} <br>
+<b>Payment Method:</b> Demo Gateway
+</p>
+
+
+<h6>Delivery Address</h6>
+
+<p>
+{{ order.address if order.address else "Address not available" }}
+</p>
+
+
+{% if order.refund_status %}
+
+<div class="alert alert-warning">
+
+<b>Refund Status:</b> {{order.refund_status}} <br>
+Amount will be credited within <b>7 days</b>.
+
+</div>
+
+{% else %}
+
+<h6>Raise Dispute</h6>
+
+<form action="/raise-request/{{order.id}}" method="POST" onclick="event.stopPropagation()">
+
+<textarea name="reason"
+class="form-control mb-2"
+rows="2"
+placeholder="Describe the issue..."
+required></textarea>
+
+<button class="btn btn-danger btn-sm">
+Raise Dispute
+</button>
+
+</form>
+
+{% endif %}
+
+
+<h6 class="mt-4">Submit Review</h6>
+
+<form action="/review-product/{{order.product_id}}" method="POST" onclick="event.stopPropagation()">
+
+<select name="rating" class="form-control mb-2">
+
+<option value="5">★★★★★ Excellent</option>
+<option value="4">★★★★ Good</option>
+<option value="3">★★★ Average</option>
+<option value="2">★★ Poor</option>
+<option value="1">★ Bad</option>
+
+</select>
+
+<textarea name="review"
+class="form-control mb-2"
+rows="2"
+placeholder="Write your review">
+</textarea>
+
+<button class="btn btn-primary btn-sm">
+Submit Review
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-center p-5">
+
+<h5>No Orders Yet</h5>
+
+<p class="text-muted">
+Looks like you haven’t purchased anything yet.
+</p>
+
+<a href="/" class="btn btn-primary">
+Browse Marketplace
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+
+<!-- CANCEL MODAL -->
+
+<div id="cancelModal" class="cancel-modal">
+
+<div class="cancel-box">
+
+<h5>Cancel this order?</h5>
+
+<p class="text-muted">
+This action cannot be undone.
+</p>
+
+<div class="modal-actions">
+
+<button class="btn btn-danger" id="confirmCancelBtn">
+Cancel Order
+</button>
+
+<button class="btn btn-secondary" onclick="closeCancelModal()">
+Keep Order
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<style>
+
+.order-card{
+background:white;
+border-radius:14px;
+padding:18px;
+margin-bottom:16px;
+cursor:pointer;
+box-shadow:0 8px 20px rgba(0,0,0,0.06);
+transition:0.25s;
+}
+
+.product-img{
+border-radius:8px;
+object-fit:cover;
+}
+
+.price{
+color:#16a34a;
+}
+
+.progress-track{
+height:8px;
+border-radius:10px;
+background:#e5e7eb;
+}
+
+.order-details{
+display:none;
+}
+
+.cancel-link{
+background:none;
+border:none;
+color:#ef4444;
+font-size:13px;
+cursor:pointer;
+}
+
+.cancel-modal{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.4);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:2000;
+}
+
+.cancel-box{
+background:white;
+padding:25px;
+border-radius:10px;
+width:320px;
+text-align:center;
+box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+.modal-actions{
+margin-top:15px;
+display:flex;
+justify-content:space-between;
+}
+
+</style>
+
+
+<script>
+
+let cancelFormId=null
+
+function openCancelModal(id){
+
+cancelFormId="cancelForm"+id
+
+document.getElementById("cancelModal").style.display="flex"
+
+}
+
+function closeCancelModal(){
+
+document.getElementById("cancelModal").style.display="none"
+
+}
+
+document.getElementById("confirmCancelBtn").onclick=function(){
+
+if(cancelFormId){
+document.getElementById(cancelFormId).submit()
+}
+
+}
+
+function toggleOrder(id){
+
+let all=document.querySelectorAll(".order-details")
+
+all.forEach(el=>{
+if(el.id!=="order"+id){
+el.style.display="none"
+}
+})
+
+let el=document.getElementById("order"+id)
+
+if(el.style.display==="block"){
+el.style.display="none"
+}else{
+el.style.display="block"
+}
+
+}
+
+document.addEventListener("DOMContentLoaded",function(){
+
+document.querySelectorAll(".progress-bar").forEach(bar=>{
+let width=bar.getAttribute("data-width")
+bar.style.width=width+"%"
+})
+
+})
+
+</script>
+
+{% endblock %}

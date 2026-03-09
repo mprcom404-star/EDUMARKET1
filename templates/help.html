@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+body{
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
+}
+
+.help-card{
+max-width:750px;
+margin:auto;
+margin-top:70px;
+background:white;
+padding:40px;
+border-radius:20px;
+box-shadow:0 20px 50px rgba(0,0,0,0.08);
+text-align:center;
+}
+
+.help-icon{
+font-size:60px;
+margin-bottom:15px;
+}
+
+.support-box{
+background:#f8fafc;
+border-radius:12px;
+padding:15px;
+margin-top:15px;
+}
+
+.faq-section{
+max-width:900px;
+margin:auto;
+margin-top:40px;
+}
+
+</style>
+
+<div class="container">
+
+<div class="help-card">
+
+<div class="help-icon">💬</div>
+
+<h2 class="fw-bold mb-3">Help Centre</h2>
+
+<p class="text-muted">
+Need assistance with buying, selling, payments, or managing your account?
+Our support team is here to help.
+</p>
+
+<div class="support-box">
+<p class="mb-1"><strong>Email Support</strong></p>
+<p class="text-muted">support@edumarket.com</p>
+</div>
+
+<div class="support-box">
+<p class="mb-1"><strong>Phone Support</strong></p>
+<p class="text-muted">+91 9876543210</p>
+</div>
+
+<p class="text-muted mt-3">
+We usually respond within 24 hours.
+</p>
+
+<div class="mt-4">
+<a href="/" class="btn btn-primary me-2">🏠 Back to Home</a>
+<a href="/contact" class="btn btn-outline-dark">📩 Contact Support</a>
+</div>
+
+</div>
+
+<!-- FAQ SECTION -->
+
+<div class="faq-section">
+
+<h3 class="mb-4 text-center">Frequently Asked Questions</h3>
+
+<div class="accordion" id="faqAccordion">
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+How do I buy study materials?
+</button>
+</h2>
+<div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+<div class="accordion-body">
+Browse products, click on the item you want, and proceed to checkout to complete payment.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+How can I become a seller?
+</button>
+</h2>
+<div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+<div class="accordion-body">
+Register an account and switch your role to seller. Then you can upload study materials and start selling.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+How do seller payouts work?
+</button>
+</h2>
+<div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+<div class="accordion-body">
+After a product is sold, the admin verifies the order and releases the payout to the seller’s bank account.
+</div>
+</div>
+</div>
+
+<div class="accordion-item">
+<h2 class="accordion-header">
+<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+What should I do if a payment fails?
+</button>
+</h2>
+<div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+<div class="accordion-body">
+Retry the payment or contact support if the issue continues.
+</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

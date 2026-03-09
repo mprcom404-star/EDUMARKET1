@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<h3 class="mb-4 fw-bold">⚠ My Disputes</h3>
+
+{% if disputes %}
+
+<table class="table table-hover shadow-sm">
+
+<thead class="table-light">
+<tr>
+<th>Ticket ID</th>
+<th>Order</th>
+<th>Status</th>
+<th>Date</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for d in disputes %}
+
+<tr>
+
+<td>#{{ d.ticket_id }}</td>
+
+<td>{{ d.order_id }}</td>
+
+<td>
+
+<span class="badge
+
+{% if d.status == "Open" %}
+bg-danger
+{% elif d.status == "Under Review" %}
+bg-warning text-dark
+{% elif d.status == "Resolved" %}
+bg-success
+{% else %}
+bg-secondary
+{% endif %}
+
+">
+
+{{ d.status }}
+
+</span>
+
+</td>
+
+<td>{{ d.created_at.strftime("%d %b %Y") }}</td>
+
+<td>
+
+<a href="/dispute/{{ d.id }}" class="btn btn-sm btn-primary">
+View
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="text-center p-5">
+
+<h5>No disputes raised</h5>
+
+<p class="text-muted">
+If there is a problem with an order you can raise a dispute.
+</p>
+
+<a href="/orders" class="btn btn-primary">
+View Orders
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

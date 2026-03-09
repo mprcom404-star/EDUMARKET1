@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Create Account - EduMarket</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#1e3a8a,#6366f1);
+}
+
+/* MAIN CARD */
+
+.register-card{
+width:1000px;
+border-radius:20px;
+overflow:hidden;
+background:white;
+box-shadow:0 30px 70px rgba(0,0,0,.35);
+}
+
+/* PROGRESS BAR */
+
+.progress-container{
+display:flex;
+justify-content:space-between;
+padding:20px 40px;
+background:#f1f5f9;
+}
+
+.step{
+width:25%;
+text-align:center;
+position:relative;
+font-size:14px;
+font-weight:600;
+color:#94a3b8;
+transition:.3s;
+}
+
+.step::before{
+content:"";
+display:block;
+width:28px;
+height:28px;
+border-radius:50%;
+background:#cbd5f5;
+margin:auto;
+margin-bottom:6px;
+transition:.4s;
+}
+
+.step.active{
+color:#2563eb;
+}
+
+.step.active::before{
+background:#2563eb;
+transform:scale(1.1);
+}
+
+.progress-line{
+position:absolute;
+top:34px;
+left:0;
+height:4px;
+background:#2563eb;
+width:0%;
+transition:.4s;
+}
+
+/* LEFT PANEL */
+
+.left-panel{
+background:#f8fafc;
+padding:40px;
+}
+
+.left-panel h4{
+color:#2563eb;
+margin-bottom:20px;
+}
+
+/* RIGHT PANEL */
+
+.right-panel{
+background:linear-gradient(135deg,#4f46e5,#7c3aed);
+color:white;
+padding:40px;
+}
+
+.right-panel h4{
+margin-bottom:20px;
+}
+
+/* avatar */
+
+.avatar-letter{
+width:70px;
+height:70px;
+border-radius:50%;
+background:#2563eb;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:26px;
+font-weight:bold;
+margin-bottom:15px;
+}
+
+/* form */
+
+.form-control{
+border-radius:8px;
+padding:10px;
+margin-bottom:10px;
+}
+
+.right-panel .form-control{
+background:rgba(255,255,255,.15);
+border:none;
+color:white;
+}
+
+.right-panel .form-control::placeholder{
+color:#e5e7eb;
+}
+
+/* button */
+
+.register-btn{
+background:#22c55e;
+border:none;
+padding:12px;
+border-radius:10px;
+color:white;
+font-weight:600;
+width:100%;
+margin-top:10px;
+transition:.3s;
+}
+
+.register-btn:hover{
+background:#16a34a;
+transform:translateY(-2px);
+}
+
+/* password strength */
+
+.progress{
+height:6px;
+margin-top:6px;
+}
+
+/* bank section */
+
+.bank-section{
+display:none;
+background:#eef2ff;
+padding:15px;
+border-radius:10px;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="register-card">
+
+<!-- ANIMATED PROGRESS -->
+
+<div class="progress-container">
+
+<div class="step active" id="step1">Account</div>
+<div class="step" id="step2">Contact</div>
+<div class="step" id="step3">Security</div>
+<div class="step" id="step4">Finish</div>
+
+</div>
+
+<form method="POST" enctype="multipart/form-data" id="registerForm">
+
+<div class="row g-0">
+
+<!-- LEFT PANEL -->
+
+<div class="col-md-6 left-panel">
+
+<div class="avatar-letter" id="avatarLetter">?</div>
+
+<h4>General Information</h4>
+
+<input type="text" name="first_name" id="firstName" class="form-control" placeholder="First Name" required>
+
+<input type="text" name="last_name" class="form-control" placeholder="Last Name" required>
+
+<input type="email" name="email" class="form-control" placeholder="Email Address" required>
+
+<label>Profile Avatar</label>
+<input type="file" name="avatar" class="form-control">
+
+<select name="role" id="role" class="form-control" onchange="toggleSeller()">
+<option value="buyer">Buyer Account</option>
+<option value="seller">Seller Account</option>
+</select>
+
+<div class="bank-section" id="bankSection">
+
+<h6>Seller Bank Details</h6>
+
+<input type="text" name="account_name" class="form-control" placeholder="Account Holder Name">
+
+<input type="text" name="account_number" class="form-control" placeholder="Account Number">
+
+<input type="text" name="ifsc" class="form-control" placeholder="IFSC Code">
+
+</div>
+
+</div>
+
+<!-- RIGHT PANEL -->
+
+<div class="col-md-6 right-panel">
+
+<h4>Contact Details</h4>
+
+<select name="isd" class="form-control">
+<option value="+91">🇮🇳 +91 India</option>
+<option value="+971">🇦🇪 +971 UAE</option>
+<option value="+94">🇱🇰 +94 Sri Lanka</option>
+<option value="+880">🇧🇩 +880 Bangladesh</option>
+<option value="+977">🇳🇵 +977 Nepal</option>
+</select>
+
+<input type="text" name="phone" class="form-control" placeholder="Phone Number">
+
+<select name="country" class="form-control">
+<option>India</option>
+<option>Sri Lanka</option>
+<option>Bangladesh</option>
+<option>Nepal</option>
+<option>UAE</option>
+</select>
+
+<select name="state" class="form-control">
+<option>Kerala</option>
+<option>Tamil Nadu</option>
+<option>Karnataka</option>
+<option>Maharashtra</option>
+<option>Delhi</option>
+<option>Gujarat</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>West Bengal</option>
+</select>
+
+<input type="text" name="city" class="form-control" placeholder="City">
+
+<textarea name="address" class="form-control" placeholder="Full Address"></textarea>
+
+<input type="password" id="password" name="password" class="form-control" placeholder="Password">
+
+<div class="progress">
+<div id="strengthBar" class="progress-bar"></div>
+</div>
+
+<button type="submit" class="register-btn">
+Register
+</button>
+
+</div>
+
+</div>
+
+</form>
+
+</div>
+
+<script>
+
+/* avatar greeting */
+
+const firstName=document.getElementById("firstName")
+const avatarLetter=document.getElementById("avatarLetter")
+
+firstName.addEventListener("input",function(){
+avatarLetter.textContent=firstName.value.charAt(0).toUpperCase()||"?"
+updateProgress()
+})
+
+/* seller toggle */
+
+function toggleSeller(){
+
+let role=document.getElementById("role").value
+let bank=document.getElementById("bankSection")
+
+if(role==="seller"){
+bank.style.display="block"
+}else{
+bank.style.display="none"
+}
+
+updateProgress()
+
+}
+
+/* password strength */
+
+const password=document.getElementById("password")
+const bar=document.getElementById("strengthBar")
+
+password.addEventListener("input",function(){
+
+let val=password.value
+let strength=0
+
+if(val.length>5) strength+=25
+if(val.match(/[A-Z]/)) strength+=25
+if(val.match(/[0-9]/)) strength+=25
+if(val.match(/[@$!%*?&]/)) strength+=25
+
+bar.style.width=strength+"%"
+
+if(strength<40) bar.className="progress-bar bg-danger"
+else if(strength<75) bar.className="progress-bar bg-warning"
+else bar.className="progress-bar bg-success"
+
+updateProgress()
+
+})
+
+/* animated progress */
+
+function updateProgress(){
+
+let steps=document.querySelectorAll(".step")
+
+steps[1].classList.add("active")
+
+if(password.value.length>5){
+steps[2].classList.add("active")
+}
+
+if(password.value.length>8){
+steps[3].classList.add("active")
+}
+
+}
+
+</script>
+
+</body>
+</html>

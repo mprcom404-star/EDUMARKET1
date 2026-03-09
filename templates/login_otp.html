@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<title>EduMarket Secure Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+
+/* BACKGROUND */
+
+body{
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+font-family:'Segoe UI',sans-serif;
+background:linear-gradient(-45deg,#1e3a8a,#2563eb,#4f46e5,#6366f1);
+background-size:400% 400%;
+animation:gradientMove 15s ease infinite;
+overflow:hidden;
+}
+
+@keyframes gradientMove{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+/* FLOATING PARTICLES */
+
+.particles{
+position:absolute;
+width:100%;
+height:100%;
+overflow:hidden;
+}
+
+.particles span{
+position:absolute;
+width:6px;
+height:6px;
+background:white;
+border-radius:50%;
+opacity:.3;
+animation:float 10s linear infinite;
+}
+
+@keyframes float{
+0%{transform:translateY(100vh) scale(0)}
+100%{transform:translateY(-10vh) scale(1)}
+}
+
+/* CARD */
+
+.verify-card{
+position:relative;
+z-index:2;
+width:420px;
+padding:40px;
+border-radius:18px;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(16px);
+box-shadow:0 25px 60px rgba(0,0,0,.35);
+text-align:center;
+color:white;
+animation:fadeIn .6s ease;
+}
+
+/* TITLE */
+
+.logo{
+font-size:22px;
+font-weight:700;
+letter-spacing:1px;
+margin-bottom:15px;
+}
+
+.secure-icon{
+font-size:42px;
+margin-bottom:10px;
+color:#93c5fd;
+}
+
+/* OTP INPUT */
+
+.otp{
+font-size:26px;
+letter-spacing:10px;
+text-align:center;
+padding:12px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,.9);
+transition:.25s;
+}
+
+.otp:focus{
+outline:none;
+box-shadow:0 0 0 2px #60a5fa;
+transform:scale(1.05);
+}
+
+/* BUTTON */
+
+.verify-btn{
+margin-top:18px;
+padding:12px;
+border:none;
+border-radius:10px;
+background:linear-gradient(90deg,#111827,#1f2937);
+color:white;
+font-weight:600;
+width:100%;
+transition:.3s;
+}
+
+.verify-btn:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+/* RESEND */
+
+.resend{
+margin-top:15px;
+font-size:14px;
+}
+
+.resend a{
+color:#93c5fd;
+text-decoration:none;
+font-weight:600;
+}
+
+/* SECURITY NOTE */
+
+.security-note{
+margin-top:15px;
+font-size:13px;
+color:#e2e8f0;
+}
+
+/* ANIMATION */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- FLOATING PARTICLES -->
+
+<div class="particles">
+<span style="left:10%;animation-delay:0s"></span>
+<span style="left:25%;animation-delay:2s"></span>
+<span style="left:40%;animation-delay:4s"></span>
+<span style="left:60%;animation-delay:1s"></span>
+<span style="left:75%;animation-delay:3s"></span>
+<span style="left:90%;animation-delay:5s"></span>
+</div>
+
+<div class="verify-card">
+
+<div class="logo">EDU MARKET</div>
+
+<div class="secure-icon">
+<i class="bi bi-shield-lock-fill"></i>
+</div>
+
+<h4>Secure Login Verification</h4>
+
+<p>Enter the OTP sent to your email</p>
+
+<form method="POST">
+
+<input
+type="text"
+name="otp"
+maxlength="6"
+class="form-control otp"
+placeholder="------"
+required>
+
+<button class="verify-btn">
+Verify OTP
+</button>
+
+</form>
+
+<div class="resend">
+Didn't receive the code?
+<a href="#">Resend OTP</a>
+</div>
+
+<div class="security-note">
+<i class="bi bi-lock-fill"></i>
+Protected by EduMarket Secure Authentication
+</div>
+
+</div>
+
+</body>
+</html>

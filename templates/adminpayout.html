@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">Seller Payout Management</h2>
+
+<div class="card p-3 mb-4 shadow-sm">
+
+<h5>Total Pending Payout: ₹{{total_pending}}</h5>
+
+</div>
+
+<table class="table table-bordered table-hover">
+
+<thead class="table-dark">
+
+<tr>
+<th>Order ID</th>
+<th>Product</th>
+<th>Seller</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% if payouts %}
+
+{% for p in payouts %}
+
+<tr>
+
+<td>{{p.order_id}}</td>
+<td>{{p.product_name}}</td>
+<td>{{p.seller_name}}</td>
+<td>₹{{p.amount}}</td>
+
+<td>
+
+{% if p.status == "Pending" %}
+<span class="badge bg-warning">Pending</span>
+{% else %}
+<span class="badge bg-success">Paid</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if p.status == "Pending" %}
+
+<a href="/admin/pay-seller/{{p.id}}" class="btn btn-success btn-sm">
+Pay Seller
+</a>
+
+{% else %}
+
+<span class="text-success">Completed</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+{% else %}
+
+<tr>
+<td colspan="6" class="text-center text-muted">
+No payout records available
+</td>
+</tr>
+
+{% endif %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

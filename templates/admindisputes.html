@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+
+body{
+background:linear-gradient(135deg,#eef2ff,#f8fafc);
+font-family:Segoe UI;
+}
+
+/* CARD */
+
+.dashboard-card{
+background:white;
+border-radius:18px;
+padding:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* TABLE */
+
+.table{
+margin-top:10px;
+}
+
+.table thead{
+background:#f1f5f9;
+font-weight:600;
+}
+
+.table tbody tr:hover{
+background:#f9fafb;
+transition:0.2s;
+}
+
+/* STATUS BADGES */
+
+.badge-open{
+background:#ef4444;
+}
+
+.badge-review{
+background:#3b82f6;
+}
+
+.badge-resolved{
+background:#22c55e;
+}
+
+.badge-rejected{
+background:#6b7280;
+}
+
+/* ACTION BUTTONS */
+
+.btn-action{
+border-radius:10px;
+font-size:14px;
+}
+
+.ticket{
+font-weight:600;
+color:#6366f1;
+}
+
+</style>
+
+<div class="container mt-5">
+
+<div class="dashboard-card">
+
+<h3 class="mb-4">⚖ Dispute Management</h3>
+
+<table class="table table-bordered align-middle">
+
+<thead>
+
+<tr>
+<th>Ticket</th>
+<th>Order</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Type</th>
+<th>Status</th>
+<th>Date</th>
+<th>Actions</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in requests %}
+
+<tr>
+
+<td class="ticket">
+#{{ r.ticket_id if r.ticket_id else r.id }}
+</td>
+
+<td>{{ r.order_id }}</td>
+
+<td>{{ r.buyer_id }}</td>
+
+<td>{{ r.seller_id }}</td>
+
+<td>
+<span class="badge bg-warning">
+{{ r.request_type }}
+</span>
+</td>
+
+<td>
+
+{% if r.status == "Open" %} <span class="badge badge-open">Open</span>
+
+{% elif r.status == "Under Review" %} <span class="badge badge-review">Under Review</span>
+
+{% elif r.status == "Resolved" %} <span class="badge badge-resolved">Resolved</span>
+
+{% elif r.status == "Rejected" %} <span class="badge badge-rejected">Rejected</span>
+
+{% endif %}
+
+</td>
+
+<td>
+{{ r.created_at.strftime("%Y-%m-%d") }}
+</td>
+
+<td>
+
+<a href="/request/{{r.id}}" 
+class="btn btn-primary btn-sm btn-action">
+Chat </a>
+
+{% if r.status == "Open" or r.status == "Under Review" %}
+
+<a href="/admin/update-request/{{r.id}}/Resolved"
+class="btn btn-success btn-sm btn-action">
+Resolve </a>
+
+<a href="/admin/update-request/{{r.id}}/Rejected"
+class="btn btn-danger btn-sm btn-action">
+Reject </a>
+
+{% else %}
+
+<span class="badge bg-dark">
+Closed
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+{% endblock %}

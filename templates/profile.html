@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row">
+
+<!-- PROFILE CARD -->
+
+<div class="col-lg-4">
+
+<div class="profile-card text-center">
+
+<div class="avatar">
+
+{% if user.image %}
+<img src="{{ url_for('static', filename='profiles/' + user.image) }}">
+{% else %}
+{{ user.name[0] }}
+{% endif %}
+
+</div>
+
+<h4 class="mt-3">{{ user.name }}</h4>
+
+<p class="text-muted">{{ user.email }}</p>
+
+<hr>
+
+<a href="/edit-profile" class="btn btn-outline-primary w-100 mb-2">
+Edit Profile
+</a>
+
+<a href="/orders" class="btn btn-outline-dark w-100 mb-2">
+My Orders
+</a>
+
+<!-- NEW REFUND TAB -->
+
+<a href="/refunds" class="btn btn-outline-success w-100 mb-2">
+Refunds
+</a>
+
+<a href="/my-disputes" class="btn btn-outline-danger w-100 mb-2">
+My Disputes
+</a>
+
+<a href="/notifications" class="btn btn-outline-secondary w-100 mb-2">
+Notifications
+</a>
+
+<a href="/help" class="btn btn-outline-secondary w-100">
+Help Centre
+</a>
+
+</div>
+
+</div>
+
+<!-- ORDER HISTORY -->
+
+<div class="col-lg-8">
+
+<h4 class="mb-4">Recent Orders</h4>
+
+{% if orders %}
+
+{% for order in orders %}
+
+<div class="order-card">
+
+<div class="order-left">
+
+<img src="{{ url_for('static', filename='uploads/' + order.product_image) }}">
+
+<div>
+
+<h6>{{ order.product_name }}</h6>
+
+<small class="text-muted">
+Order ID: {{ order.order_id }}
+</small>
+
+<br>
+
+<small class="text-muted">
+Ordered on {{ order.purchase_time.strftime('%d %b %Y') }}
+</small>
+
+</div>
+
+</div>
+
+<div class="order-right">
+
+<p class="price">
+₹{{ order.price }}
+</p>
+
+<span class="badge
+
+{% if order.fulfillment_status == "Delivered" %}
+bg-success
+{% elif order.fulfillment_status == "Shipped" %}
+bg-primary
+{% elif order.fulfillment_status == "Processing" %}
+bg-warning text-dark
+{% elif order.fulfillment_status == "Cancelled" %}
+bg-danger
+{% else %}
+bg-secondary
+{% endif %}
+
+">
+
+{{ order.fulfillment_status }}
+
+</span>
+
+<!-- SHOW REFUND STATUS -->
+
+{% if order.refund_status and order.refund_status != "None" %}
+
+<br>
+
+<small class="text-muted">
+Refund: 
+
+{% if order.refund_status == "Processing" %}
+<span class="badge bg-warning text-dark">Processing</span>
+{% elif order.refund_status == "Credited" %}
+<span class="badge bg-success">Credited</span>
+{% else %}
+{{ order.refund_status }}
+{% endif %}
+
+</small>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<!-- DISPUTE STATUS -->
+
+{% if order.dispute %}
+
+<div class="dispute-box">
+
+⚠ Dispute Ticket:
+<b>{{ order.dispute.ticket_id }}</b>
+
+<br>
+
+Status:
+
+<span class="badge
+
+{% if order.dispute.status == "Open" %}
+bg-danger
+{% elif order.dispute.status == "Under Review" %}
+bg-warning text-dark
+{% elif order.dispute.status == "Resolved" %}
+bg-success
+{% else %}
+bg-secondary
+{% endif %}
+
+">
+
+{{ order.dispute.status }}
+
+</span>
+
+</div>
+
+{% endif %}
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-center p-5">
+
+<h5>No orders yet</h5>
+
+<p class="text-muted">
+Looks like you haven't purchased anything yet.
+</p>
+
+<a href="/" class="btn btn-dark mt-3">
+Browse Products
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+/* PROFILE CARD */
+
+.profile-card{
+background:white;
+padding:30px;
+border-radius:18px;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+/* AVATAR */
+
+.avatar img{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+}
+
+.avatar{
+width:80px;
+height:80px;
+border-radius:50%;
+background:#4f46e5;
+color:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:32px;
+margin:auto;
+}
+
+/* ORDER CARD */
+
+.order-card{
+background:white;
+border-radius:16px;
+padding:18px;
+margin-bottom:12px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+box-shadow:0 10px 30px rgba(0,0,0,0.06);
+}
+
+.order-left{
+display:flex;
+gap:15px;
+align-items:center;
+}
+
+.order-left img{
+width:55px;
+height:55px;
+border-radius:10px;
+object-fit:cover;
+}
+
+.price{
+color:#16a34a;
+font-weight:700;
+}
+
+/* DISPUTE BOX */
+
+.dispute-box{
+background:#fff3cd;
+border-radius:10px;
+padding:10px 15px;
+margin-bottom:20px;
+font-size:14px;
+}
+
+</style>
+
+{% endblock %}

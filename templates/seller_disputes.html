@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h3 class="mb-4">⚠ Dispute Center</h3>
+
+{% if disputes %}
+
+<div class="table-responsive">
+
+<table class="table table-hover align-middle">
+
+<thead class="table-light">
+<tr>
+<th>Ticket</th>
+<th>Order</th>
+<th>Buyer Reason</th>
+<th>Seller Response</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for d in disputes %}
+
+<tr>
+
+<td>
+<b>{{ d.ticket_id }}</b>
+</td>
+
+<td>
+#{{ d.order_id }}
+</td>
+
+<td>
+{{ d.reason }}
+</td>
+
+<td>
+{% if d.seller_response %}
+{{ d.seller_response }}
+{% else %}
+<span class="text-muted">No response yet</span>
+{% endif %}
+</td>
+
+<td>
+
+{% if d.status == "Open" %}
+<span class="badge bg-danger">Open</span>
+
+{% elif d.status == "Under Review" %}
+<span class="badge bg-warning text-dark">Under Review</span>
+
+{% elif d.status == "Resolved" %}
+<span class="badge bg-success">Resolved</span>
+
+{% else %}
+<span class="badge bg-secondary">{{ d.status }}</span>
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="/request/{{d.id}}" class="btn btn-sm btn-primary">
+Open Ticket
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+</table>
+
+</div>
+
+{% else %}
+
+<div class="alert alert-info">
+No disputes raised yet.
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

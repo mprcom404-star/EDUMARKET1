@@ -1,0 +1,329 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="progress-steps">
+<div class="step done">Cart</div>
+<div class="step active">Checkout</div>
+<div class="step">Payment</div>
+<div class="step">Success</div>
+</div>
+
+</div>
+
+<div class="container mt-5">
+<div class="row g-4">
+
+<!-- SHIPPING DETAILS -->
+
+<div class="col-md-7">
+
+<form method="POST" action="/checkout">
+
+<h5 class="mb-3">Shipping Details</h5>
+
+<div class="row g-3">
+
+<div class="col-md-6">
+<input name="address_name"
+class="form-control"
+maxlength="50"
+placeholder="Address Name (Home / Hostel / Office)">
+</div>
+
+<div class="col-md-6">
+<label class="form-check mt-2">
+<input type="checkbox" name="default_address" class="form-check-input">
+Set as Default Address
+</label>
+</div>
+
+<div class="col-md-6">
+<input name="name"
+class="form-control"
+maxlength="60"
+pattern="[A-Za-z\s]{3,60}"
+placeholder="Full Name"
+required>
+</div>
+
+<div class="col-md-6">
+<input type="email"
+name="email"
+class="form-control"
+maxlength="80"
+placeholder="Email Address"
+required>
+</div>
+
+<!-- PHONE -->
+
+<div class="col-md-6">
+<div class="input-group">
+
+<select name="isd" class="form-select" style="max-width:120px">
+<option value="+91" selected>🇮🇳 +91</option>
+<option value="+880">🇧🇩 +880</option>
+<option value="+94">🇱🇰 +94</option>
+<option value="+977">🇳🇵 +977</option>
+<option value="+975">🇧🇹 +975</option>
+<option value="+960">🇲🇻 +960</option>
+<option value="+86">🇨🇳 +86</option>
+<option value="+971">🇦🇪 +971</option>
+<option value="+968">🇴🇲 +968</option>
+<option value="+974">🇶🇦 +974</option>
+</select>
+
+<input name="phone"
+class="form-control"
+placeholder="Primary Phone"
+pattern="[0-9]{10}"
+maxlength="10"
+title="Enter 10 digit phone number"
+required>
+
+</div>
+</div>
+
+<div class="col-md-6">
+<input name="secondary_phone"
+class="form-control"
+placeholder="Secondary Phone (Optional)"
+pattern="[0-9]{10}"
+maxlength="10">
+</div>
+
+<!-- ADDRESS -->
+
+<div class="col-md-6">
+<input name="house"
+class="form-control"
+maxlength="80"
+placeholder="House / Building / Flat"
+required>
+</div>
+
+<div class="col-md-6">
+<input name="street"
+class="form-control"
+maxlength="120"
+placeholder="Street / Area"
+required>
+</div>
+
+<div class="col-md-6">
+<input name="pincode"
+class="form-control"
+placeholder="Pincode"
+pattern="[0-9]{6}"
+maxlength="6"
+title="Enter 6 digit pincode"
+required>
+</div>
+
+<div class="col-md-6">
+
+<select name="state" class="form-select" required>
+
+<option selected disabled>Select State</option>
+<option>Andhra Pradesh</option>
+<option>Arunachal Pradesh</option>
+<option>Assam</option>
+<option>Bihar</option>
+<option>Chhattisgarh</option>
+<option>Goa</option>
+<option>Gujarat</option>
+<option>Haryana</option>
+<option>Himachal Pradesh</option>
+<option>Jharkhand</option>
+<option>Karnataka</option>
+<option>Kerala</option>
+<option>Madhya Pradesh</option>
+<option>Maharashtra</option>
+<option>Manipur</option>
+<option>Meghalaya</option>
+<option>Mizoram</option>
+<option>Nagaland</option>
+<option>Odisha</option>
+<option>Punjab</option>
+<option>Rajasthan</option>
+<option>Sikkim</option>
+<option>Tamil Nadu</option>
+<option>Telangana</option>
+<option>Tripura</option>
+<option>Uttar Pradesh</option>
+<option>Uttarakhand</option>
+<option>West Bengal</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6">
+
+<select name="country" class="form-select" required>
+
+<option selected value="India">🇮🇳 India</option>
+<option>🇧🇩 Bangladesh</option>
+<option>🇳🇵 Nepal</option>
+<option>🇱🇰 Sri Lanka</option>
+<option>🇧🇹 Bhutan</option>
+<option>🇲🇻 Maldives</option>
+<option>🇨🇳 China</option>
+<option>🇦🇪 UAE</option>
+<option>🇴🇲 Oman</option>
+<option>🇶🇦 Qatar</option>
+
+</select>
+
+</div>
+
+</div>
+
+<br>
+
+<label class="form-check">
+<input type="checkbox" required class="form-check-input">
+I agree to the 
+<a href="/terms" target="_blank">Terms & Conditions</a>
+</label>
+
+<label class="form-check">
+<input type="checkbox" required class="form-check-input">
+I understand the 
+<a href="/safety-guidelines" target="_blank">Marketplace Safety Guidelines</a>
+</label>
+
+<br>
+
+<button class="btn btn-success w-100">
+Proceed to Payment
+</button>
+
+</form>
+
+</div>
+
+<!-- ORDER SUMMARY -->
+
+<div class="col-md-5">
+
+<div class="card shadow-sm p-4">
+
+<h4 class="mb-3">Order Summary</h4>
+
+{% for item in items %}
+
+<div class="d-flex align-items-center mb-3">
+
+{% if item.product.images %} <img src="{{ url_for('static', filename='uploads/' + item.product.images[0].image) }}"
+width="70"
+class="rounded me-3">
+{% else %} <img src="{{ url_for('static', filename='uploads/noimage.png') }}"
+width="70"
+class="rounded me-3">
+{% endif %}
+
+<div>
+
+<b>{{ item.product.name }}</b><br>
+
+<span class="text-muted">
+₹{{ item.product.price or 0 }} × {{ item.quantity }}
+</span>
+
+<br>
+
+<b>₹{{ item.total or 0 }}</b>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+<hr>
+
+<div class="d-flex justify-content-between mb-2">
+<span>Subtotal</span>
+<span>₹{{ subtotal or 0 }}</span>
+</div>
+
+<form method="POST">
+
+<div class="input-group mb-3">
+
+<input 
+type="text"
+name="coupon"
+class="form-control"
+placeholder="Enter coupon code">
+
+<button class="btn btn-outline-primary" type="submit">
+Apply
+</button>
+
+</div>
+
+</form>
+
+<h6 class="fw-bold mt-3">Available Coupons</h6>
+
+{% for c in coupons %}
+
+<div class="border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
+
+<div>
+
+<b>{{ c.code }}</b><br>
+
+<small class="text-muted">
+{{ c.discount }}% OFF • Min ₹{{ c.min_amount }}
+</small>
+
+{% if c.expiry %} <br> <small class="text-danger">
+Expires: {{ c.expiry.strftime("%Y-%m-%d") }} </small>
+{% endif %}
+
+</div>
+
+{% if applied_coupon == c.code %}
+
+<span class="badge bg-success">Applied</span>
+
+{% else %}
+
+<form method="POST">
+<input type="hidden" name="coupon" value="{{ c.code }}">
+<button class="btn btn-sm btn-success">Apply</button>
+</form>
+
+{% endif %}
+
+</div>
+
+{% endfor %}
+
+<hr>
+
+<div class="d-flex justify-content-between">
+<span>Platform Fee ({{ platform_fee_percent }}%)</span>
+<span>₹{{ platform_fee }}</span>
+</div>
+
+<hr>
+
+<div class="d-flex justify-content-between fw-bold">
+<span>Total</span>
+<span>₹{{ total or 0 }}</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+{% endblock %}

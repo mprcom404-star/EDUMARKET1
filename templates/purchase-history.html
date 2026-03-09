@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="fw-bold mb-4">💰 Seller Dashboard</h2>
+
+<div class="row g-4">
+
+<!-- EARNINGS CARD -->
+
+<div class="col-md-4">
+
+<div class="earnings-card">
+
+<h6>Total Earnings</h6>
+
+<div class="earnings-amount">₹{{total}}</div>
+
+<p class="text-muted small">
+Revenue generated from sold products
+</p>
+
+</div>
+
+</div>
+
+<!-- TOTAL ORDERS CARD -->
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h6>Total Orders</h6>
+
+<div class="stat-number">
+{{ orders|length }}
+</div>
+
+</div>
+
+</div>
+
+<!-- ACTIVE PRODUCTS -->
+
+<div class="col-md-4">
+
+<div class="stat-card">
+
+<h6>Active Sales</h6>
+
+<div class="stat-number text-success">
+{{ orders|length }}
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ORDER HISTORY -->
+
+<div class="card shadow-sm border-0 mt-5">
+
+<div class="card-body">
+
+<h4 class="mb-3">📦 Sales History</h4>
+
+{% if orders %}
+
+<table class="table table-hover align-middle">
+
+<thead>
+
+<tr>
+<th>Product ID</th>
+<th>Price</th>
+<th>Status</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for order in orders %}
+
+<tr>
+
+<td>#{{order.product_id}}</td>
+
+<td class="fw-bold text-success">
+₹{{order.price}}
+</td>
+
+<td>
+
+{% if order.status == "Paid" %}
+
+<span class="badge bg-success">
+Paid
+</span>
+
+{% else %}
+
+<span class="badge bg-warning text-dark">
+{{order.status}}
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% else %}
+
+<div class="text-center p-5">
+
+<h5>No sales yet</h5>
+
+<p class="text-muted">
+Once someone buys your product, it will appear here.
+</p>
+
+<a href="/sell" class="btn btn-primary">
+Sell Your First Item
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</div>
+
+<style>
+
+/* EARNINGS CARD */
+
+.earnings-card{
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+color:white;
+border-radius:18px;
+padding:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.15);
+}
+
+.earnings-amount{
+font-size:32px;
+font-weight:700;
+margin-top:5px;
+}
+
+
+/* STATS */
+
+.stat-card{
+background:white;
+border-radius:18px;
+padding:25px;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+.stat-number{
+font-size:28px;
+font-weight:700;
+}
+
+
+/* TABLE */
+
+.table-hover tbody tr:hover{
+background:#f1f5f9;
+}
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<div class="row g-5">
+
+<!-- PRODUCT IMAGE GALLERY -->
+
+<div class="col-lg-6">
+
+<div class="product-gallery">
+
+{% if product.images %}
+
+<img id="mainImage"
+src="{{ url_for('static', filename='uploads/' + product.images[0].image) }}"
+class="main-image">
+
+<div class="thumb-row">
+
+{% for img in product.images %}
+
+<img
+src="{{ url_for('static', filename='uploads/' + img.image) }}"
+class="thumb"
+onclick="changeImage(this)">
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<img src="{{ url_for('static', filename='uploads/noimage.png') }}"
+class="main-image">
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+<!-- PRODUCT DETAILS -->
+
+<div class="col-lg-6">
+
+<h2 class="fw-bold">{{ product.name }}</h2>
+
+<p class="text-muted">
+Category: {{ product.category.name if product.category else "General" }}
+</p>
+
+<p class="small text-muted">
+SKU: {{ product.sku }}
+</p>
+
+
+<!-- RATING -->
+
+<!-- RATING -->
+
+<div class="rating-box">
+
+<b>{{ avg_rating }}</b>
+
+<span style="color:#f59e0b;font-size:18px;">
+
+{% for i in range(1,6) %}
+{% if avg_rating >= i %}
+★
+{% else %}
+<span style="color:#d1d5db;">★</span>
+{% endif %}
+{% endfor %}
+
+</span>
+
+<span class="text-muted">
+({{ review_count }} reviews)
+</span>
+
+</div>
+
+
+<!-- PRICE -->
+
+<h3 class="price mt-3">
+₹{{ product.price }}
+</h3>
+
+
+<!-- SHIPPING -->
+
+<div class="shipping-box">
+🚚 Estimated delivery: 3-5 days
+</div>
+
+
+<!-- SELLER -->
+
+<div class="mt-3">
+
+<p class="mb-1">
+Sold by:
+<b>{{ seller.name if seller else "Marketplace Seller" }}</b>
+</p>
+
+<small class="text-muted">
+Usually responds within a few hours
+</small>
+
+</div>
+
+
+<!-- ACTION BUTTONS -->
+
+<div class="mt-4 d-flex gap-2 flex-wrap">
+
+<a href="/buy/{{product.id}}" class="btn btn-primary btn-lg">
+Buy Now
+</a>
+
+<a href="/add-cart/{{product.id}}" class="btn btn-outline-dark btn-lg">
+Add to Cart
+</a>
+
+<a href="/chat/{{product.seller}}" class="btn btn-success btn-lg">
+<i class="bi bi-chat-dots"></i>
+Message Seller
+</a>
+
+</div>
+
+
+<!-- DESCRIPTION -->
+
+<div class="mt-5">
+
+<h5>Product Description</h5>
+
+<p class="text-muted">
+{{ product.description if product.description else "No description available." }}
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<hr class="my-5">
+
+
+<!-- REVIEWS -->
+
+<h4 class="mb-4">Customer Reviews</h4>
+
+{% if reviews %}
+
+{% for r in reviews %}
+
+<div class="review-card p-3 mb-3 border rounded">
+
+<div style="font-size:18px;color:#f59e0b;">
+
+{% for i in range(r.rating|int) %}
+★
+{% endfor %}
+
+{% for i in range(5 - (r.rating|int)) %}
+<span style="color:#d1d5db;">★</span>
+{% endfor %}
+
+</div>
+
+<p class="mt-2">
+{{ r.review }}
+</p>
+
+<small class="text-muted">
+
+{% if r.user %}
+<b>{{ r.user.name }}</b>
+{% else %}
+User {{ r.user_id }}
+{% endif %}
+
+{% if r.created_at %}
+ • {{ r.created_at.strftime("%d %b %Y") }}
+{% endif %}
+
+</small>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<p class="text-muted">
+No reviews yet.
+</p>
+
+{% endif %}
+
+
+
+<!-- REVIEW FORM -->
+
+<div class="review-box mt-4">
+
+<h5>Write a Review</h5>
+
+<form method="POST" action="/review-product/{{product.id}}">
+
+<select name="rating" class="form-select mb-2">
+
+<option value="5">★★★★★ Excellent</option>
+<option value="4">★★★★ Very Good</option>
+<option value="3">★★★ Average</option>
+<option value="2">★★ Poor</option>
+<option value="1">★ Terrible</option>
+
+</select>
+
+<textarea name="review"
+class="form-control mb-2"
+rows="3"
+placeholder="Share your experience with this product..."
+required></textarea>
+
+<button class="btn btn-dark">
+Submit Review
+</button>
+
+</form>
+
+</div>
+
+<hr class="my-5">z
+
+<!-- LATEST PRODUCTS -->
+
+<h4 class="mb-4">Latest Products</h4>
+
+<div class="latest-products">
+
+{% for p in latest_products %}
+
+<a href="/product/{{p.id}}" class="latest-card">
+
+{% if p.images %}
+<img src="{{ url_for('static', filename='uploads/' + p.images[0].image) }}">
+{% else %}
+<img src="{{ url_for('static', filename='uploads/noimage.png') }}">
+{% endif %}
+
+<p class="mt-2">{{ p.name }}</p>
+
+<span class="text-success fw-bold">
+₹{{ p.price }}
+</span>
+
+</a>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<style>
+
+/* MAIN IMAGE */
+
+.main-image{
+width:100%;
+border-radius:12px;
+box-shadow:0 15px 40px rgba(0,0,0,0.1);
+}
+
+
+/* THUMBNAILS */
+
+.thumb-row{
+display:flex;
+gap:10px;
+margin-top:10px;
+}
+
+.thumb{
+width:70px;
+height:70px;
+object-fit:cover;
+border-radius:8px;
+cursor:pointer;
+border:2px solid transparent;
+}
+
+.thumb:hover{
+border-color:#2563eb;
+}
+
+
+/* PRICE */
+
+.price{
+color:#16a34a;
+font-weight:700;
+}
+
+
+/* RATING */
+
+.rating-box{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+
+/* SHIPPING */
+
+.shipping-box{
+background:#f8fafc;
+padding:10px 15px;
+border-radius:10px;
+margin-top:15px;
+}
+
+
+/* REVIEW CARD */
+
+.review-card{
+background:white;
+padding:18px;
+border-radius:14px;
+margin-bottom:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
+}
+
+
+/* LATEST PRODUCTS */
+
+.latest-products{
+display:flex;
+overflow-x:auto;
+gap:20px;
+}
+
+.latest-card{
+min-width:160px;
+background:white;
+padding:10px;
+border-radius:12px;
+text-decoration:none;
+color:black;
+box-shadow:0 10px 20px rgba(0,0,0,0.05);
+}
+
+.latest-card img{
+width:100%;
+height:120px;
+object-fit:cover;
+border-radius:10px;
+}
+
+
+/* MESSAGE BUTTON */
+
+.btn-success{
+background:#22c55e;
+border:none;
+}
+
+.btn-success:hover{
+background:#16a34a;
+}
+
+</style>
+
+
+<script>
+
+function changeImage(el){
+document.getElementById("mainImage").src = el.src;
+}
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h3 class="mb-4">Set Discount</h3>
+
+<div class="card p-4 shadow">
+
+<h5>{{ product.name }}</h5>
+
+<form method="POST">
+
+<div class="mb-3">
+<label class="form-label">Discount Percentage</label>
+
+<input type="number"
+name="discount"
+class="form-control"
+min="0"
+max="90"
+value="{{ product.discount }}"
+required>
+
+</div>
+
+<button class="btn btn-success">
+Update Discount
+</button>
+
+<a href="/seller-dashboard" class="btn btn-secondary">
+Cancel
+</a>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}

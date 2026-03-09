@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>EDU MARKET</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+<style>
+
+/* GLOBAL */
+
+body{
+background:#f5f7fb;
+font-family:'Segoe UI',sans-serif;
+transition:background .3s,color .3s;
+}
+
+.container{
+animation:fadeIn .35s ease;
+}
+
+@keyframes fadeIn{
+from{opacity:0;transform:translateY(10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#0d1117;
+padding:14px 0;
+box-shadow:0 4px 18px rgba(0,0,0,0.25);
+position:sticky;
+top:0;
+z-index:1000;
+}
+
+.navbar a{
+color:white !important;
+margin-right:18px;
+text-decoration:none;
+font-weight:500;
+transition:.25s;
+position:relative;
+}
+
+.navbar a:hover{
+color:#8BC34A !important;
+}
+
+.navbar-brand{
+font-size:20px;
+letter-spacing:1px;
+}
+
+/* DARK MODE */
+
+.theme-switch{
+position:relative;
+display:inline-block;
+width:52px;
+height:26px;
+margin-left:15px;
+}
+
+.theme-switch input{
+opacity:0;
+width:0;
+height:0;
+}
+
+.slider{
+position:absolute;
+cursor:pointer;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#ccc;
+transition:.4s;
+border-radius:34px;
+}
+
+.slider:before{
+position:absolute;
+content:"";
+height:20px;
+width:20px;
+left:3px;
+bottom:3px;
+background:white;
+transition:.4s;
+border-radius:50%;
+box-shadow:0 2px 6px rgba(0,0,0,.3);
+}
+
+input:checked + .slider{
+background:#0d6efd;
+}
+
+input:checked + .slider:before{
+transform:translateX(26px);
+}
+
+/* FOOTER */
+
+.footer{
+background:#0d1117;
+color:#ddd;
+}
+
+.footer-title{
+color:#8BC34A;
+font-weight:600;
+margin-bottom:15px;
+}
+
+.footer-links{
+list-style:none;
+padding:0;
+}
+
+.footer-links li{
+margin-bottom:7px;
+}
+
+.footer-links a{
+color:#ddd;
+text-decoration:none;
+transition:.25s;
+}
+
+.footer-links a:hover{
+color:#8BC34A;
+padding-left:4px;
+}
+
+.contact-text{
+font-size:14px;
+margin-bottom:6px;
+}
+
+.whatsapp-link{
+display:flex;
+align-items:center;
+gap:6px;
+text-decoration:none;
+color:#25D366;
+}
+
+.social-icons a{
+color:white;
+font-size:18px;
+margin-right:12px;
+transition:.25s;
+}
+
+.social-icons a:hover{
+color:#8BC34A;
+}
+
+/* BACK TO TOP */
+
+#topBtn{
+position:fixed;
+bottom:25px;
+right:25px;
+display:none;
+background:#0d6efd;
+color:white;
+border:none;
+border-radius:50%;
+width:45px;
+height:45px;
+font-size:20px;
+}
+
+/* DARK MODE */
+
+body.dark-mode{
+background:#0f172a;
+color:#e2e8f0;
+}
+
+body.dark-mode .navbar{
+background:#020617;
+}
+
+body.dark-mode .footer{
+background:#020617;
+}
+
+body.dark-mode .card{
+background:#1e293b;
+color:white;
+}
+
+body.dark-mode a{
+color:#e2e8f0 !important;
+}
+
+/* MODERN ALERT */
+
+.modern-alert{
+border:none;
+border-radius:12px;
+padding:14px 18px;
+font-weight:500;
+box-shadow:0 10px 25px rgba(0,0,0,0.1);
+animation:slideAlert .35s ease;
+}
+
+@keyframes slideAlert{
+from{opacity:0;transform:translateY(-10px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+/* TOAST NOTIFICATIONS */
+
+.toast-container{
+position:fixed;
+top:80px;
+right:20px;
+z-index:2000;
+}
+
+.toast{
+border-radius:12px;
+box-shadow:0 12px 30px rgba(0,0,0,0.15);
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar navbar-expand-lg">
+
+<div class="container">
+
+<a class="navbar-brand d-flex align-items-center text-white fw-bold" href="/">
+<img src="{{ url_for('static', filename='logo.png') }}" width="40" class="me-2">
+EDU MARKET
+</a>
+
+<div class="ms-auto d-flex align-items-center">
+
+<a href="/">Home</a>
+
+{% if session.get("user_id") %}
+
+{% if current_user and current_user.role == "seller" %}
+<a href="/sell">Sell</a>
+{% endif %}
+
+<a href="/cart">
+<i class="bi bi-cart"></i>
+Cart
+{% if cart_count|default(0) > 0 %}
+<span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+{{ cart_count }}
+</span>
+{% endif %}
+</a>
+
+<a href="/inbox">
+<i class="bi bi-chat-dots"></i>
+Messages
+</a>
+
+<a href="/dashboard">Dashboard</a>
+<a href="/seller">Seller</a>
+
+<a href="/notifications">
+<i class="bi bi-bell"></i>
+{% if notification_count|default(0) > 0 %}
+<span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+{{ notification_count }}
+</span>
+{% endif %}
+</a>
+
+<a href="/profile">Profile</a>
+
+{% if current_user and current_user.is_admin %}
+<a href="/admin" class="text-warning">Admin</a>
+{% endif %}
+
+<a href="/logout">Logout</a>
+
+{% else %}
+
+<a href="/login">Login</a>
+<a href="/register">Register</a>
+<a href="/admin-login" class="text-warning">Admin</a>
+
+{% endif %}
+
+<label class="theme-switch">
+<input type="checkbox" id="darkToggle">
+<span class="slider"></span>
+</label>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- PAGE CONTENT -->
+
+<div class="container mt-4">
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<div class="toast-container">
+
+{% for message in messages %}
+
+<div class="toast align-items-center text-bg-success border-0 show">
+
+<div class="d-flex">
+
+<div class="toast-body">
+<i class="bi bi-check-circle me-2"></i>
+{{ message }}
+</div>
+
+<button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% endif %}
+{% endwith %}
+
+{% block content %}
+{% endblock %}
+
+</div>
+
+
+<!-- FOOTER (unchanged) -->
+
+<footer class="footer mt-5">
+
+<div class="container py-5">
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="d-flex align-items-center mb-2">
+<img src="{{ url_for('static', filename='logo.png') }}" width="40" class="me-2">
+<h5 class="text-white m-0">EDU MARKET</h5>
+</div>
+
+<p class="small">
+A student powered marketplace to buy and sell used educational materials like books, calculators and study tools.
+</p>
+
+<div class="social-icons">
+<a href="#"><i class="bi bi-facebook"></i></a>
+<a href="#"><i class="bi bi-instagram"></i></a>
+<a href="#"><i class="bi bi-twitter"></i></a>
+</div>
+
+</div>
+
+<div class="col-md-3">
+<h5 class="footer-title">Marketplace</h5>
+<ul class="footer-links">
+<li><a href="/">Browse Materials</a></li>
+<li><a href="/sell">Sell Your Item</a></li>
+<li><a href="/cart">Shopping Cart</a></li>
+<li><a href="/dashboard">Dashboard</a></li>
+</ul>
+</div>
+
+<div class="col-md-3">
+<h5 class="footer-title">Policies</h5>
+<ul class="footer-links">
+<li><a href="/help">Help Centre</a></li>
+<li><a href="/terms">Terms & Conditions</a></li>
+<li><a href="/privacy">Privacy Policy</a></li>
+<li><a href="/refund">Refund Policy</a></li>
+</ul>
+</div>
+
+<div class="col-md-3">
+<h5 class="footer-title">Contact Us</h5>
+
+<p class="contact-text">
+📍 Kozhikode, Kerala<br>
+Kuttikkattoor – 673008
+</p>
+
+<p class="contact-text">
+📞 +91 8867987908
+</p>
+
+<a href="https://wa.me/917012425024" target="_blank" class="whatsapp-link">
+<i class="bi bi-whatsapp"></i> Chat on WhatsApp
+</a>
+
+<p class="contact-text mt-2">
+✉ supportmpr@gmail.com<br>
+✉ mprcom404@gmail.com
+</p>
+
+</div>
+
+</div>
+
+<hr>
+
+<div class="text-center small">
+© 2026 EDU MARKET — Student Marketplace
+</div>
+
+</div>
+
+</footer>
+
+<button id="topBtn">↑</button>
+
+<script>
+
+const toggle=document.getElementById("darkToggle")
+
+if(localStorage.getItem("darkMode")==="enabled"){
+document.body.classList.add("dark-mode")
+toggle.checked=true
+}
+
+toggle.addEventListener("change",function(){
+
+if(this.checked){
+document.body.classList.add("dark-mode")
+localStorage.setItem("darkMode","enabled")
+}else{
+document.body.classList.remove("dark-mode")
+localStorage.setItem("darkMode","disabled")
+}
+
+})
+
+const btn=document.getElementById("topBtn")
+
+window.onscroll=function(){
+if(document.body.scrollTop>200 || document.documentElement.scrollTop>200){
+btn.style.display="block"
+}else{
+btn.style.display="none"
+}
+}
+
+btn.onclick=function(){
+window.scrollTo({top:0,behavior:"smooth"})
+}
+
+/* AUTO CLOSE TOAST */
+
+setTimeout(function(){
+let toasts=document.querySelectorAll(".toast")
+toasts.forEach(t=>{
+t.classList.remove("show")
+})
+},4000)
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

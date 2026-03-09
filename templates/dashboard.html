@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="fw-bold mb-4">❤️ Your Wishlist</h2>
+
+<div class="row g-4">
+
+{% if wishlist %}
+
+{% for item in wishlist %}
+
+<div class="col-lg-4 col-md-6">
+
+<div class="wishlist-card">
+
+<!-- PRODUCT IMAGE -->
+
+<div class="wishlist-img">
+
+{% if item.images %}
+<img src="{{ url_for('static', filename='uploads/' + item.images[0].image) }}">
+{% else %}
+<img src="{{ url_for('static', filename='uploads/noimage.png') }}">
+{% endif %}
+
+<div class="wishlist-overlay">
+
+<a href="/product/{{ item.id }}" class="btn btn-light btn-sm">
+View
+</a>
+
+<a href="/add-cart/{{ item.id }}" class="btn btn-success btn-sm">
+Add to Cart
+</a>
+
+</div>
+
+</div>
+
+<!-- PRODUCT DETAILS -->
+
+<div class="wishlist-body">
+
+<h6 class="fw-bold">{{ item.name }}</h6>
+
+<p class="price">₹{{ item.price or 0 }}</p>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<!-- EMPTY STATE -->
+
+<div class="empty-wishlist">
+
+<h4>Your wishlist is empty</h4>
+
+<p class="text-muted">
+Save items you like to buy them later.
+</p>
+
+<a href="/" class="btn btn-primary">
+Browse Marketplace
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+<style>
+
+/* WISHLIST CARD */
+
+.wishlist-card{
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,0.08);
+transition:0.35s;
+}
+
+.wishlist-card:hover{
+transform:translateY(-6px);
+box-shadow:0 20px 40px rgba(0,0,0,0.15);
+}
+
+/* IMAGE */
+
+.wishlist-img{
+position:relative;
+overflow:hidden;
+}
+
+.wishlist-img img{
+width:100%;
+height:220px;
+object-fit:cover;
+transition:0.4s;
+}
+
+.wishlist-card:hover img{
+transform:scale(1.08);
+}
+
+/* OVERLAY BUTTONS */
+
+.wishlist-overlay{
+position:absolute;
+bottom:0;
+left:0;
+right:0;
+background:rgba(0,0,0,0.6);
+padding:10px;
+display:flex;
+justify-content:center;
+gap:10px;
+opacity:0;
+transition:0.3s;
+}
+
+.wishlist-card:hover .wishlist-overlay{
+opacity:1;
+}
+
+/* BODY */
+
+.wishlist-body{
+padding:15px;
+}
+
+.price{
+font-weight:600;
+color:#198754;
+}
+
+/* EMPTY STATE */
+
+.empty-wishlist{
+width:100%;
+text-align:center;
+padding:80px 20px;
+background:white;
+border-radius:16px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+}
+
+</style>
+
+{% endblock %}

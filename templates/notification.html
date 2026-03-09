@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="fw-bold mb-4">🔔 Notifications</h2>
+
+{% if notes %}
+
+<div class="notification-container">
+
+{% for n in notes %}
+
+<div class="notification-card">
+
+<div class="icon">
+🔔
+</div>
+
+<div class="message">
+
+<p class="mb-1">{{ n.message }}</p>
+
+<small class="text-muted">Marketplace update</small>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+{% else %}
+
+<!-- EMPTY STATE -->
+
+<div class="empty-notifications">
+
+<div class="empty-icon">🔕</div>
+
+<h5>No notifications yet</h5>
+
+<p class="text-muted">
+Updates about orders, listings, and activity will appear here.
+</p>
+
+<a href="/" class="btn btn-primary">
+Explore Marketplace
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<style>
+
+/* NOTIFICATION CARD */
+
+.notification-card{
+display:flex;
+align-items:center;
+gap:15px;
+background:white;
+padding:16px;
+border-radius:14px;
+box-shadow:0 10px 25px rgba(0,0,0,0.08);
+margin-bottom:12px;
+transition:0.3s;
+animation:fadeIn 0.4s ease;
+}
+
+.notification-card:hover{
+transform:translateX(6px);
+box-shadow:0 15px 35px rgba(0,0,0,0.12);
+}
+
+
+/* ICON */
+
+.icon{
+font-size:22px;
+width:45px;
+height:45px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#eef2ff;
+border-radius:50%;
+}
+
+
+/* MESSAGE */
+
+.message p{
+font-weight:500;
+}
+
+
+/* EMPTY STATE */
+
+.empty-notifications{
+text-align:center;
+background:white;
+padding:80px 20px;
+border-radius:18px;
+box-shadow:0 15px 40px rgba(0,0,0,0.08);
+}
+
+.empty-icon{
+font-size:48px;
+margin-bottom:10px;
+animation:pulse 2s infinite;
+}
+
+
+/* ANIMATIONS */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@keyframes pulse{
+0%{transform:scale(1)}
+50%{transform:scale(1.1)}
+100%{transform:scale(1)}
+}
+
+</style>
+
+{% endblock %}
+
+
+

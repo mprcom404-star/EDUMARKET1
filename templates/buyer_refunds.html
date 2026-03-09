@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+<h3 class="fw-bold mb-4">💰 Refund Tracker</h3>
+
+{% if refunds %}
+
+{% for r in refunds %}
+
+<div class="refund-card mb-4">
+
+<div class="d-flex justify-content-between align-items-center mb-2">
+
+<div>
+<b>{{ r.refund_id }}</b>
+<br>
+<small class="text-muted">Order #{{ r.order_id }}</small>
+</div>
+
+<div class="text-end">
+<span class="price">₹{{ r.amount }}</span>
+</div>
+
+</div>
+
+<!-- TIMELINE -->
+
+<div class="timeline">
+
+<div class="step {% if r.status in ['Processing','Credited'] %}active{% endif %}">
+Cancelled
+</div>
+
+<div class="step {% if r.status in ['Processing','Credited'] %}active{% endif %}">
+Refund Initiated
+</div>
+
+<div class="step {% if r.status == 'Credited' %}active{% endif %}">
+Seller Paid
+</div>
+
+<div class="step {% if r.status == 'Credited' %}active{% endif %}">
+Credited
+</div>
+
+</div>
+
+<!-- DETAILS -->
+
+<div class="refund-details mt-3">
+
+<p>
+<b>Status:</b>
+
+{% if r.status == "Processing" %}
+<span class="badge bg-warning text-dark">Processing</span>
+{% else %}
+<span class="badge bg-success">Refund Credited</span>
+{% endif %}
+
+</p>
+
+<p>
+<b>Refund Transaction:</b>
+{{ r.refund_transaction_id if r.refund_transaction_id else "Pending" }}
+</p>
+
+<p>
+<b>Expected Credit:</b> within 7 days
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+{% else %}
+
+<div class="text-center p-5 bg-white rounded shadow-sm">
+
+<h5>No Refunds Yet</h5>
+
+<p class="text-muted">
+Cancelled orders and refunds will appear here.
+</p>
+
+<a href="/orders" class="btn btn-primary mt-2">
+View Orders
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+<style>
+
+/* REFUND CARD */
+
+.refund-card{
+background:white;
+border-radius:16px;
+padding:20px;
+box-shadow:0 8px 25px rgba(0,0,0,0.08);
+}
+
+/* PRICE */
+
+.price{
+color:#16a34a;
+font-weight:700;
+}
+
+/* TIMELINE */
+
+.timeline{
+display:flex;
+justify-content:space-between;
+margin-top:15px;
+position:relative;
+}
+
+.timeline:before{
+content:"";
+position:absolute;
+top:10px;
+left:0;
+right:0;
+height:4px;
+background:#e5e7eb;
+z-index:0;
+}
+
+.step{
+background:white;
+border:2px solid #e5e7eb;
+padding:6px 10px;
+border-radius:20px;
+font-size:12px;
+position:relative;
+z-index:1;
+}
+
+.step.active{
+border-color:#22c55e;
+color:#16a34a;
+font-weight:600;
+}
+
+/* DETAILS */
+
+.refund-details p{
+margin:4px 0;
+font-size:14px;
+}
+
+</style>
+
+{% endblock %}

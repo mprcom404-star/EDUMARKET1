@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">💰 Refund Management</h2>
+
+<table class="table table-hover shadow-sm">
+
+<thead class="table-light">
+
+<tr>
+<th>Refund ID</th>
+<th>Order</th>
+<th>Buyer</th>
+<th>Seller</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Transaction</th>
+<th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for r in refunds %}
+
+<tr>
+
+<td>{{r.refund_id}}</td>
+
+<td>#{{r.order_id}}</td>
+
+<td>{{r.buyer_id}}</td>
+
+<td>{{r.seller_id}}</td>
+
+<td class="text-danger fw-bold">
+₹{{r.amount}}
+</td>
+
+<td>
+
+{% if r.status == "Processing" %}
+<span class="badge bg-warning text-dark">
+Processing
+</span>
+
+{% elif r.status == "Credited" %}
+<span class="badge bg-success">
+Refunded
+</span>
+
+{% else %}
+<span class="badge bg-secondary">
+{{r.status}}
+</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if r.refund_transaction_id %}
+<span class="text-success">
+{{r.refund_transaction_id}}
+</span>
+{% else %}
+<span class="text-muted">
+Pending
+</span>
+{% endif %}
+
+</td>
+
+<td>
+
+{% if r.status == "Processing" %}
+
+<span class="text-muted">
+Waiting Seller Payment
+</span>
+
+{% else %}
+
+<span class="text-success">
+Completed
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}

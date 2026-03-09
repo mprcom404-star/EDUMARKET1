@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5 d-flex justify-content-center">
+
+<div class="card shadow-lg border-0 text-center p-5" style="max-width:500px">
+
+<div class="mb-3">
+
+<h1 style="font-size:60px">⚠️</h1>
+
+<h3 class="text-danger fw-bold">
+Unauthorized Admin Access
+</h3>
+
+</div>
+
+<p class="text-muted">
+
+Your login attempt has been rejected because the provided administrator credentials are invalid.
+
+</p>
+
+<div class="alert alert-danger mt-3">
+
+<b>Security Notice</b><br>
+
+Repeated unauthorized attempts may lead to:
+
+• Temporary account suspension
+• IP monitoring and logging
+• Disciplinary action under platform policy
+
+</div>
+
+<a href="/admin-login" class="btn btn-primary mt-3">
+
+Return to Admin Login
+
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}
